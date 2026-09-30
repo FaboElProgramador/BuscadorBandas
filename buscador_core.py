@@ -1,7 +1,17 @@
+import unicodedata
+
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
+
+
+def normalizar_texto(texto):
+    texto = unicodedata.normalize("NFKD", texto.casefold())
+    return "".join(
+        caracter for caracter in texto
+        if not unicodedata.combining(caracter)
+    )
 
 
 def buscar_paginas(palabra, urls, informar):
@@ -26,8 +36,10 @@ def buscar_paginas(palabra, urls, informar):
                 WebDriverWait(navegador, 15).until(
                     lambda driver: driver.execute_script("return document.readyState") == "complete"
                 )
-                contenido = navegador.find_element("tag name", "body").text.lower()
-                resultado = "✅ Encontrado" if palabra in contenido else "❌ No encontrado"
+                contenido_visible = navegador.find_element("tag name", "body").text
+                contenido = normalizar_texto(f"{contenido_visible} {navegador.page_source}")
+                artista = normalizar_texto(palabra)
+                resultado = "✅ Encontrado" if artista in contenido else "❌ No encontrado"
                 informar(f"{resultado} en: {url}\n")
             except Exception as error:
                 informar(f"⚠️ Error al acceder {url}: {error}\n")
