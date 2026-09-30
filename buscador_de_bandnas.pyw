@@ -1,16 +1,17 @@
 import tkinter as tk
 from tkinter import messagebox, scrolledtext
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import WebDriverException
-from selenium.webdriver.support.ui import WebDriverWait
 from urllib.parse import urlparse
 import threading
+
+from buscador_core import buscar_paginas
 
 def buscar():
     palabra = entry_palabra.get().strip().lower()
     urls = [url.strip() for url in text_urls.get("1.0", tk.END).splitlines() if url.strip()]
-    urls_validas = [url for url in urls if urlparse(url).scheme in ("http", "https") and urlparse(url).netloc]
+    urls_validas = list(dict.fromkeys(
+        url for url in urls
+        if urlparse(url).scheme in ("http", "https") and urlparse(url).netloc
+    ))
     urls_invalidas = [url for url in urls if url not in urls_validas]
     resultados.delete("1.0", tk.END)
 
@@ -37,40 +38,9 @@ def finalizar_busqueda():
     btn_buscar.config(state=tk.NORMAL)
 
 def buscar_en_paginas(palabra, urls):
-    # Configurar navegador sin interfaz gráfica (headless)
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--no-sandbox")
-
-    try:
-        navegador = webdriver.Chrome(options=chrome_options)
-    except WebDriverException as e:
-        ventana.after(0, mostrar_resultado, f"⚠️ Error iniciando el navegador: {e}\n")
-        ventana.after(0, finalizar_busqueda)
-        return
-
-    try:
-        for url in urls:
-            ventana.after(0, mostrar_resultado, f"Procesando: {url}\n")
-            try:
-                navegador.get(url)
-                WebDriverWait(navegador, 15).until(
-                    lambda driver: driver.execute_script("return document.readyState") == "complete"
-                )
-                contenido = navegador.find_element("tag name", "body").text.lower()
-
-                if palabra in contenido:
-                    mensaje = f"✅ Encontrado en: {url}\n"
-                else:
-                    mensaje = f"❌ No encontrado en: {url}\n"
-            except Exception as e:
-                mensaje = f"⚠️ Error al acceder {url}: {e}\n"
-
-            ventana.after(0, mostrar_resultado, mensaje)
-    finally:
-        navegador.quit()
-        ventana.after(0, finalizar_busqueda)
+    informar = lambda mensaje: ventana.after(0, mostrar_resultado, mensaje)
+    buscar_paginas(palabra, urls, informar)
+    ventana.after(0, finalizar_busqueda)
 
 # GUI igual que antes
 ventana = tk.Tk()
