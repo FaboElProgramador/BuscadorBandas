@@ -20,4 +20,4 @@ pip install selenium
 python .\buscador_de_bandnas.pyw
 ```
 
-La aplicacion permite introducir una palabra clave y una URL por linea. Selenium abre las paginas en segundo plano y muestra si encuentra la palabra buscada.
+La aplicacion permite introducir un artista y una URL por linea. Las URLs tambien pueden mantenerse en `fuentes.txt`; usa una línea por URL y antepone `#` a los comentarios. Selenium abre las paginas en segundo plano y muestra si encuentra el artista buscado.

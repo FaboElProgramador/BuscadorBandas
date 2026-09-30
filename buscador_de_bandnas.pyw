@@ -1,10 +1,29 @@
 import tkinter as tk
 from tkinter import messagebox, scrolledtext
 from datetime import date, timedelta
+from pathlib import Path
 from urllib.parse import urlparse
 import threading
 
 from buscador_core import buscar_paginas
+
+RUTA_FUENTES = Path(__file__).with_name("fuentes.txt")
+
+def cargar_fuentes():
+    try:
+        urls = []
+        for linea in RUTA_FUENTES.read_text(encoding="utf-8").splitlines():
+            url = linea.strip()
+            if url and not url.startswith("#") and url not in urls:
+                urls.append(url)
+    except OSError as error:
+        messagebox.showerror("Error al cargar fuentes", f"No se pudo leer {RUTA_FUENTES.name}: {error}")
+        return
+
+    text_urls.delete("1.0", tk.END)
+    text_urls.insert("1.0", "\n".join(urls))
+    resultados.delete("1.0", tk.END)
+    resultados.insert(tk.END, f"Se cargaron {len(urls)} fuentes.\n")
 
 def buscar():
     palabra = entry_palabra.get().strip().lower()
@@ -90,7 +109,11 @@ entry_fecha_hasta.grid(row=0, column=3, padx=5)
 tk.Label(ventana, text="URLs manuales (una por línea, respaldo temporal):").pack()
 text_urls = scrolledtext.ScrolledText(ventana, width=85, height=5)
 text_urls.pack(pady=5)
-text_urls.insert(tk.END, "https://quilmesrock.enigmatickets.com/\nhttps://www.movistararena.com.ar/")
+
+frame_fuentes = tk.Frame(ventana)
+frame_fuentes.pack(pady=5)
+tk.Button(frame_fuentes, text="Cargar fuentes.txt", command=cargar_fuentes).pack(side=tk.LEFT, padx=5)
+tk.Label(frame_fuentes, text=f"Archivo: {RUTA_FUENTES.name}").pack(side=tk.LEFT, padx=5)
 
 btn_buscar = tk.Button(ventana, text="Buscar", command=buscar)
 btn_buscar.pack(pady=10)
@@ -99,4 +122,5 @@ tk.Label(ventana, text="Resultados:").pack()
 resultados = scrolledtext.ScrolledText(ventana, width=85, height=15)
 resultados.pack(pady=5)
 
+cargar_fuentes()
 ventana.mainloop()
