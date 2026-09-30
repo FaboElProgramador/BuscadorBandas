@@ -18,8 +18,9 @@ def buscar_paginas(palabra, urls, informar):
         return
 
     try:
-        for url in urls:
-            informar(f"Procesando: {url}\n")
+        total_urls = len(urls)
+        for indice, url in enumerate(urls, start=1):
+            informar(f"Fuente {indice}/{total_urls}: {url}\n")
             try:
                 navegador.get(url)
                 WebDriverWait(navegador, 15).until(

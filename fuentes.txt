@@ -1,3 +1,14 @@
 # Una URL por línea. Las líneas que empiezan con # son comentarios.
-https://quilmesrock.enigmatickets.com/
-https://www.movistararena.com.ar/
+https://www.movistararena.com.ar/shows
+https://livepass.com.ar/
+https://www.ticketek.com.ar/
+https://www.allaccess.com.ar/
+https://www.entradauno.com/
+https://www.tuentrada.com/
+https://fanz.com.ar/
+https://home.passline.com/home
+https://alpogo.com/
+https://www.entradafan.com.ar/
+https://www.plateanet.com/home
+https://articket.com.ar/
+https://www.ticketsbuenosaires.com.ar/
