@@ -21,3 +21,5 @@ python .\buscador_de_bandnas.pyw
 ```
 
 La aplicacion permite introducir un artista y una URL por linea. Las URLs tambien pueden mantenerse en `fuentes.txt`; usa una línea por URL y antepone `#` a los comentarios. Selenium abre las paginas en segundo plano y muestra si encuentra el artista buscado.
+
+Conviene agregar URLs de carteleras o listados de eventos, como `/shows`. La portada general de una ticketera puede no contener los nombres de los artistas.

@@ -67,7 +67,7 @@ def buscar_paginas(palabra, urls, informar):
                 contenido_visible = navegador.find_element("tag name", "body").text
                 contenido = normalizar_texto(f"{contenido_visible} {navegador.page_source}")
                 resultado = "✅ Encontrado" if artista in contenido else "❌ No encontrado"
-                informar(f"{resultado} en: {url}\n")
+                informar(f"{resultado} en el contenido de: {url}\n")
             except Exception as error:
                 informar(f"⚠️ Error al acceder {url}: {error}\n")
     finally:

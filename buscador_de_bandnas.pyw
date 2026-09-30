@@ -75,8 +75,12 @@ def finalizar_busqueda():
 
 def buscar_en_paginas(palabra, urls):
     informar = lambda mensaje: ventana.after(0, mostrar_resultado, mensaje)
-    buscar_paginas(palabra, urls, informar)
-    ventana.after(0, finalizar_busqueda)
+    try:
+        buscar_paginas(palabra, urls, informar)
+    except Exception as error:
+        informar(f"⚠️ Error inesperado durante la búsqueda: {error}\n")
+    finally:
+        ventana.after(0, finalizar_busqueda)
 
 # GUI igual que antes
 ventana = tk.Tk()
